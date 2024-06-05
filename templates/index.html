@@ -324,8 +324,7 @@
                         if (xhr.status === 200) {
                             var response = JSON.parse(xhr.responseText);
                             resultDiv.innerHTML = `<p>Clear Explanation:</p><p id="textContent">${response.generated_content}</p>`;
-                            speak("The result is ready. Here is the description of the image.");
-                            speak(response.generated_content);
+                            speak("The result is ready. Here is the description of the image. " + response.generated_content);
                             addButtons();
                         } else {
                             resultDiv.innerHTML = "<p>Error: " + xhr.statusText + "</p>";
