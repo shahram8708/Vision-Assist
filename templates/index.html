@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Assist</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f8f8f8;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 10px;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 36px;
+        }
+
+        p {
+            color: #333;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .file-drop-area {
+            position: relative;
+            width: calc(100% - 40px);
+            margin: 10px auto;
+            padding: 20px;
+            border: 2px dashed #007bff;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .file-drop-area.is-active {
+            background-color: #e6f7ff;
+        }
+
+        .file-drop-area input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-drop-area:hover {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
+            background-color: #e6f7ff;
+        }
+
+        .file-message {
+            font-size: 16px;
+            color: #333;
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            scroll-behavior: smooth;
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            scroll-behavior: smooth;
+        }
+
+
+        #result p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .emoji {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 40px;
+            z-index: 2;
+        }
+
+        #result::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        #result::-webkit-scrollbar-track {
+            background: #f2f2f2;
+        }
+
+        #result::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        #howToUseButton:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        #howToUseButton {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container button:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        p {
+            color: #333;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ol {
+            list-style-type: decimal;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        ol li{
+            list-style: none;
+        }
+
+        ol li:before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #007bff;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome to Vision Assist</h1>
+        <p>This website is designed specifically for individuals with visual impairments, offering a comprehensive
+            platform for accessing image descriptions and gaining valuable insights.</p>
+        <p>Once you've selected an image, our advanced AI system will provide you with a detailed description of its
+            contents, enabling you to understand the visual content effortlessly.</p>
+        <div class="file-drop-area" id="fileDropArea">
+            <span class="file-message">Drag & Drop your image here</span>
+            <input type="file" id="imageInput" accept="image/*" required>
+        </div>
+        <div id="result"></div>
+        <p>For blind users:</p>
+        <ol>
+            <li>Navigate the website using a screen reader, ensuring accessibility at every step.</li>
+            <li>Activate the file upload button to seamlessly upload images for description.</li>
+            <li>Upon uploading, patiently await the descriptive text, which will appear promptly.</li>
+            <li>Utilize your screen reader to explore and comprehend the detailed description provided.</li>
+            <li>Access comprehensive instructions on navigating the website by clicking on the "How to Use" button.</li>
+        </ol>
+
+        <p>For visually impaired users, audio descriptions are also available:</p>
+        <ol>
+            <li>Enhance your browsing experience by listening to audio descriptions of uploaded images.</li>
+            <li>Ensure clarity by using headphones or speakers for optimal audio quality.</li>
+            <li>Delve deeper into the content with detailed audio descriptions, providing additional context and
+                insights.</li>
+        </ol>
+
+        <p>Experience the power of AI, as Vision Assist leverages cutting-edge technology to empower individuals with
+            visual impairments.</p>
+        <button id="howToUseButton">How to Use</button>
+    </div>
+    <script>
+        var fileInput = document.getElementById('imageInput');
+        var fileDropArea = document.getElementById('fileDropArea');
+        var fileMessage = fileDropArea.querySelector('.file-message');
+        var resultDiv = document.getElementById('result');
+
+        fileInput.addEventListener('change', generateContent);
+        fileDropArea.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            fileDropArea.classList.add('is-active');
+        });
+
+        fileDropArea.addEventListener('dragleave', function () {
+            fileDropArea.classList.remove('is-active');
+        });
+
+        fileDropArea.addEventListener('drop', function (e) {
+            e.preventDefault();
+            fileDropArea.classList.remove('is-active');
+            var files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                generateContent();
+            }
+        });
+
+        function generateContent() {
+            resultDiv.innerHTML = '<p>Please wait, processing...</p>';
+
+            var file = fileInput.files[0];
+            if (!file) {
+                alert("Please select an image.");
+                return;
+            }
+
+            fileMessage.textContent = "Selected file: " + file.name;
+
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                var imageBase64 = reader.result.split(',')[1];
+
+                var payload = {
+                    "contents": [{
+                        "parts": [{
+                            "text": "Give me this answer in detail and explain in detail what is in this image."
+                        }, {
+                            "inlineData": {
+                                "mimeType": "image/jpeg",
+                                "data": imageBase64
+                            }
+                        }]
+                    }]
+                };
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/generate_content", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            var response = JSON.parse(xhr.responseText);
+                            resultDiv.innerHTML = `<p>Clear Explanation:</p><p id="textContent">${response.generated_content}</p>`;
+                            addButtons();
+                        } else {
+                            resultDiv.innerHTML = "<p>Error: " + xhr.statusText + "</p>";
+                        }
+                    }
+                };
+
+                xhr.send(JSON.stringify(payload));
+            };
+        }
+
+
+        function addButtons() {
+            const copyButton = document.createElement('button');
+            copyButton.innerText = 'Copy Text';
+            copyButton.onclick = function () {
+                const textToCopy = document.getElementById('textContent').innerText;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    alert('Text copied to clipboard!');
+                });
+            };
+
+            const audioButton = document.createElement('button');
+            audioButton.innerText = 'Play Audio';
+            audioButton.onclick = function () {
+                const textToSpeak = document.getElementById('textContent').innerText;
+                const speechSynthesis = new SpeechSynthesisUtterance(textToSpeak);
+                window.speechSynthesis.speak(speechSynthesis);
+            };
+
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('button-container');
+            buttonContainer.appendChild(copyButton);
+            buttonContainer.appendChild(audioButton);
+
+            resultDiv.appendChild(buttonContainer);
+
+        }
+
+        document.getElementById('howToUseButton').addEventListener('click', function () {
+            const instructions = [
+                "Welcome to Vision Assist.",
+                "This website is designed for the visually impaired.",
+                "To use this website:",
+                "1. Use a screen reader to navigate the website.",
+                "2. Upload an image by activating the file upload button.",
+                "3. Wait for the descriptive text to appear after uploading.",
+                "4. Explore the description using your screen reader.",
+                "5. Click on the 'How to Use' button to hear instructions on navigating the website.",
+                "For visually impaired users, audio descriptions are also available:",
+                "1. Listen to the audio description of the image by clicking on the 'Play Audio' button.",
+                "2. Use headphones or speakers to hear the description clearly.",
+                "3. Explore the content further by listening to the detailed audio description."
+            ];
+
+            const speech = new SpeechSynthesisUtterance();
+            speech.text = instructions.join(" ");
+            window.speechSynthesis.speak(speech);
+        });
+
+    </script>
+
+</body>
+
+</html>
