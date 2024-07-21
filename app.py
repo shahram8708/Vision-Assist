@@ -25,7 +25,7 @@ def generate_content():
         image_base64 = payload['contents'][0]['parts'][1]['inlineData']['data']
         image_data = base64.b64decode(image_base64)
 
-        url = f"https://generativelanguage.googleapis.com/v1/models/gemini-pro-vision:generateContent?key={API_KEY}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={API_KEY}"
         headers = {"Content-Type": "application/json"}
 
         response = requests.post(url, headers=headers, json=payload)
